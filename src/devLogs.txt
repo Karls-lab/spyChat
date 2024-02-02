@@ -1,0 +1,10 @@
+Features:
+    - Add a title at the top of the screen called 'spy chat'
+        to make the program easier to understand. 
+
+    - Fix the bottom toolbar border and highlights
+
+    - Add hover over buttons
+
+    - Fix multiple decrypts remove messages. 
+    
