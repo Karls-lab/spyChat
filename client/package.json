@@ -1,9 +1,7 @@
 {
-  "name": "firstreactapplication",
+  "name": "client",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "proxy": "http://localhost:3001",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,11 +10,11 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "cors.js": "^0.0.1-security",
     "crypto-js": "^4.2.0",
-    "express": "^4.18.2",
+    "crypto.js": "^3.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4"
   },
   "devDependencies": {
@@ -27,8 +25,6 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "npm-run-all": "^4.1.5",
-    "react-scripts": "^5.0.1",
     "vite": "^5.0.8"
   }
 }

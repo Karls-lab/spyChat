@@ -5,7 +5,7 @@ body {
 }
 
 #root {
-  font-family: system-ui, Helvetica;
+  font-family: Roberto;
   background-color: black;
 
   text-rendering: optimizeLegibility;
@@ -48,7 +48,6 @@ body {
   flex-wrap: wrap;
   justify-content: space-around;
   height: fit-content;
-  border-top: 1px solid #fab500;
   justify-content: start;
   margin-top: 10px;
 }
@@ -57,6 +56,7 @@ body {
   display: flex;
   width: 100%;
   height: 39px;
+  margin: 1px;
 }
 
 /* divides the encrypt/decrypt toolbar into 2 */
@@ -67,7 +67,8 @@ body {
 /* Where the messages will come in through */
 #main-display {
   height: clamp(100px, 100%, 1000px);
-  width: 100%;
+  width: clamp(100px, 99%, 1000px);
+  margin: clamp(10px, 1%, 20px);
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -76,7 +77,6 @@ body {
 .message {
   border: 1px solid gray;
   display: flex;
-  margin: 10px;
   background-color: #1a1a1a;
   padding: 10px;
   border-radius: 10px;
@@ -89,14 +89,16 @@ body {
 
 .userMessage {
   background-color: #00b359;
-  margin-right: clamp(10px, 5%, 50px);
+  max-width: clamp(100px, 70%, 1000px);
+  margin-right: auto;
 }
 
 .otherUserMessage {
   background-color: #0099ff;
-  justify-content: flex-end;
-  width: fit-content;
-  /* margin-left: clamp(10px, 10px, 500px); */
+  max-width: clamp(100px, 70%, 1000px);
+  margin-left: auto;
+  margin-right: 10px;
+  padding: 10px;
 }
 
 /* Contains the text entry and Submit button */
@@ -114,7 +116,7 @@ input[type=text]:focus {
 #text-input {
   width: 70%;
   height: 95%;
-  font-size: clamp(12px, calc(.2rem + .8vw), 24px);
+  font-size: clamp(.8rem, calc(.2rem + .8vw), 24px);
   caret-color: gold;
   color: #39ff14;
   margin: auto;
@@ -124,9 +126,8 @@ input[type=text]:focus {
 
 /* input for the keys */
 .keyInput {
-  align-items: end;
   width: 100%;
-  font-size: clamp(12px, calc(.2rem + .8vw), 24px);
+  font-size: clamp(.8rem, calc(.2rem + 1vw), 24px);
 }
 
 textarea {
@@ -160,6 +161,12 @@ button {
 }
 button:hover {
   border-color: #646cff;
+  background-color: #4d0099;
+}
+
+button:active {
+  background-color: #e6ac00;
+  color: #3d3d5c;
 }
 
 a {

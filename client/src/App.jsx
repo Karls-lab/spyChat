@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid'; 
 import { encryptMessage, decryptMessage } from './encryption.jsx';
-import e from 'cors';
 
 const socket = io('http://localhost:3001', { path : '/socket.io'});
 
@@ -16,15 +15,29 @@ function App() {
 
   // Main useEffect, set up userID and handle incoming messages
   useEffect(() => {
-    // Generate a unique user ID on session mount 
-    const userID = "user-" + uuidv4();
-    setUserId(userID);
-    console.log('userID set to:', userID);
+    // Retrieve user ID from sessionStorage
+    const storedUserId = sessionStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
+    } else {
+      // Generate a unique user ID if not found in sessionStorage
+      const userID = "user-" + uuidv4();
+      setUserId(userID);
+      sessionStorage.setItem('userId', userID); // Save user ID to sessionStorage
+    }
+    
+    // Retrieve stored messages from localStorage on component mount
+    const storedMessages = localStorage.getItem('messages');
+    if (storedMessages) {
+      setMessages(JSON.parse(storedMessages));
+    }
 
     // Handle incoming messages
     socket.on('message', (message) => {
       console.log('Received message:', message);
       setMessages((prevMessages) => [...prevMessages, message]);
+      // Store messages in local storage
+      localStorage.setItem('messages', JSON.stringify([...messages, message]));
     });
     socket.on('connect', () => {
       console.log('Connected!');
@@ -43,7 +56,7 @@ function App() {
     }
   }, [messages]);
 
-  // Encryption and Decryption Logic
+  // Decrypt message
   const handleDecrypt= () => {
     // for message in messages, decrypt message
     let decryptedMessages = [];
@@ -59,20 +72,24 @@ function App() {
     });
   };
 
+  // Encrypt message
   const handleEncrypt = () => {
+    if (!textInputValue) return;
     let encryptedMessage = encryptMessage(textInputValue, encryptKey);
     setTextInputValue(encryptedMessage);
     console.log('encrypted message:', encryptedMessage);
   }
  
+  // Handle submit button click
   const handleSubmitClick = () => {
-    // Handle submit button click
+    if (!textInputValue) return;
     const newMessage = { id: uuidv4(), text: textInputValue, userID: userId};
     console.log('message:', newMessage)
     socket.emit('message', newMessage);
     setTextInputValue('');
   };
 
+  // Main html view
   return (
     <>
 

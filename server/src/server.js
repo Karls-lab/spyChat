@@ -17,7 +17,7 @@ const messages = [
 app.use(express.json());
 
 io.on('connection', (socket) => {
-  console.log('A user connected');
+  console.log('A user connected with user ID');
 
   socket.on('disconnect', () => {
     console.log('A user disconnected');

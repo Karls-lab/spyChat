@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.cjs
+*node_modules
+package-lock.json
+
