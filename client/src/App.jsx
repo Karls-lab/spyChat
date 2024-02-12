@@ -3,7 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid'; 
 import { encryptMessage, decryptMessage } from './encryption.jsx';
+import { Toaster } from 'react-hot-toast';
+import { notify} from './toast.jsx';
 
+// Declare Server Socket
 const socket = io('http://localhost:3001', { path : '/socket.io'});
 
 function App() {
@@ -15,6 +18,7 @@ function App() {
 
   // Main useEffect, set up userID and handle incoming messages
   useEffect(() => {
+    // Start of the Program
     // Retrieve user ID from sessionStorage
     const storedUserId = sessionStorage.getItem('userId');
     if (storedUserId) {
@@ -39,14 +43,24 @@ function App() {
       // Store messages in local storage
       localStorage.setItem('messages', JSON.stringify([...messages, message]));
     });
+
     socket.on('connect', () => {
       console.log('Connected!');
+      notify('Connected to server', 'success');
     });
+    socket.on('connect_error', (error) => {
+      console.log('Connection error:', error);
+      notify('Connection error', 'info');
+      setTimeout(() => {
+      }, 3000);
+    });
+
     return () => {
       // Clean up the subscription
       socket.off('message');
     };
   }, []);
+
 
   // When messages change, scroll to bottom of page
   useEffect(() => {
@@ -63,6 +77,7 @@ function App() {
     messages.forEach(message => {
       let decryptedMessage = decryptMessage(message.text, encryptKey);
       if (decryptedMessage !== '') {
+        notify('Decrypted messages', 'success');
         decryptedMessages.push({id: message.id, text: decryptedMessage, userID: message.userID});
       } else {
         decryptedMessages.push({id: message.id, text: message.text, userID: message.userID});
@@ -72,6 +87,7 @@ function App() {
     });
   };
 
+
   // Encrypt message
   const handleEncrypt = () => {
     if (!textInputValue) return;
@@ -80,6 +96,7 @@ function App() {
     console.log('encrypted message:', encryptedMessage);
   }
  
+
   // Handle submit button click
   const handleSubmitClick = () => {
     if (!textInputValue) return;
@@ -89,18 +106,22 @@ function App() {
     setTextInputValue('');
   };
 
+
   // Main html view
   return (
     <>
 
     {/* Main Container and Buttons */}
     <div className='mainContainer'>
+      {/* Toast component */}
+      <Toaster /> 
       {/* MAIN DISPLAY Component */}
       <div id="main-display" className="flexItem" ref={mainDisplayRef}>
-        {/* <div className="" */}
+        {/* Handle MESSAGES */}
         {messages.map(message => (
           <div key={message.id} 
-            className={`message ${message.userID === userId ? 'userMessage' : 'otherUserMessage'}`}>
+            className={`message ${message.userID === userId ? 'userMessage' : 'otherUserMessage'}`}
+            onClick = {() => notify('Enter in secret phrase', 'info')}>
             {message.text}
           </div>
         ))}
