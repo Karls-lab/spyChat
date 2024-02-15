@@ -18,3 +18,9 @@ Installation GUIDE:
         navigate to the server folder 
         type: 'npm install'
         type: 'npm run dev'
+
+
+Use Guide:
+    Enter a message in the text box on the left of Submit
+
+    Enter in a secret passphrase 

@@ -14,6 +14,17 @@ const notify = (message, type) => {
     });
   };
 
+  if (type == 'error') {
+    toast.error(message, {
+      style: {
+          borderRadius: '8px',
+          background: '#040015',
+          color: 'white',
+          border: '2px solid #4d0099',
+      }
+    });
+  }
+
   if (type == 'info') {
     toast(message, {
       style: {

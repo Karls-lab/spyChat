@@ -7,9 +7,19 @@ function encryptMessage(message, key) {
 }
 
 function decryptMessage(message, key) {
-    const bytes = CryptoJS.AES.decrypt(message, key);
-    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-    return decrypted;
+    try {
+        const bytes = CryptoJS.AES.decrypt(message, key);
+        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+
+        // Check if the decrypted message is valid UTF-8
+        const decoder = new TextDecoder();
+        decoder.decode(new Uint8Array(bytes.sigBytes)); 
+
+        return decrypted;
+    } catch (error) {
+        console.log("Error decrypting message:");
+        return ''; 
+    }
 };
 
 export { encryptMessage, decryptMessage };

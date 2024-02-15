@@ -44,9 +44,11 @@ function App() {
       localStorage.setItem('messages', JSON.stringify([...messages, message]));
     });
 
+    // Notify on connection status
     socket.on('connect', () => {
       console.log('Connected!');
       notify('Connected to server', 'success');
+      notify('Click on a message to decrypt', 'info')
     });
     socket.on('connect_error', (error) => {
       console.log('Connection error:', error);
@@ -56,7 +58,6 @@ function App() {
     });
 
     return () => {
-      // Clean up the subscription
       socket.off('message');
     };
   }, []);
@@ -107,6 +108,37 @@ function App() {
   };
 
 
+  // Handle Message Click
+  const handleMessageClick = (message) => {
+    if (message === '') return;
+    if (encryptKey === '') {
+      notify('Enter in secret phrase', 'info');
+      return;
+    }
+    let decryptedMessages = [];
+    let decryptedMessage = decryptMessage(message.text, encryptKey);
+    console.log('decrypted message:', decryptedMessage);
+    if (decryptedMessage === '') {
+      console.log('Failed to decrypt message');
+      notify('Failed to decrypt message', 'error');
+    } else {
+      console.log('Decrypted message:', decryptedMessage)
+      notify('Decrypted message', 'success');
+      messages.forEach(iterMessage => {
+        console.log('iterMessage:', iterMessage);
+        if (iterMessage.id === message.id) {
+          console.log('message ID:', message.id)
+          console.log('The message you clicked on:', iterMessage.text, 
+                      ' message id:', iterMessage.id);
+          iterMessage.text = decryptedMessage;
+          iterMessage.userID = message.userID;
+        }
+        decryptedMessages.push({id: iterMessage.id, text: iterMessage.text, userID: iterMessage.userID});
+      });
+      setMessages(decryptedMessages);
+    }
+  };
+
   // Main html view
   return (
     <>
@@ -121,7 +153,7 @@ function App() {
         {messages.map(message => (
           <div key={message.id} 
             className={`message ${message.userID === userId ? 'userMessage' : 'otherUserMessage'}`}
-            onClick = {() => notify('Enter in secret phrase', 'info')}>
+            onClick = {() => handleMessageClick(message)}>
             {message.text}
           </div>
         ))}
@@ -142,9 +174,6 @@ function App() {
           <div className="flexItem division">
             <button onClick={handleEncrypt} className="flexItem button smallButton">
               Encrypt Message
-            </button>
-            <button onClick={handleDecrypt} className="flexItem button smallButton">
-              Decrypt Messages
             </button>
           </div>
         </div>
